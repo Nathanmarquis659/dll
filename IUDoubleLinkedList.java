@@ -8,7 +8,7 @@ import java.util.ConcurrentModificationException;
  * An Iterator with working remove() method is implemented, but
  * ListIterator is supported.
  * 
- * @author Nathan Marquis
+ * @author NathanMarquis
  * 
  * @param <T> type to store
  */
@@ -28,6 +28,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	public void addToFront(T element) {
 		Node<T> newHead = new Node<T>(element);
 		newHead.setNext(head);
+		if (head != null) {
+			head.setPrevious(newHead);
+		}
 		head = newHead;
 		if (tail == null) {
 			tail = head;
@@ -37,7 +40,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public void addToRear(T element) {
+	public void addToRear(T element) { //Update
 		Node<T> newTail = new Node<T>(element);
 		if (!isEmpty()) {
 			tail.setNext(newTail);
@@ -55,7 +58,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public void addAfter(T element, T target) {
+	public void addAfter(T element, T target) { //Update
 		Node<T> newNode = new Node<T>(element);
 		Node<T> currentNode = head;
 		boolean isFound = false;
@@ -81,7 +84,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public void add(int index, T element) {
+	public void add(int index, T element) { //Update
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -107,7 +110,17 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (isEmpty()) {
 			throw new NoSuchElementException();
 		}
-		return remove(0);
+		T retVal = head.getElement();
+		head = head.getNext();
+		if (head == null) {
+			tail = null;
+		} else {
+			head.setPrevious(null);
+		}
+
+		size --;
+		modCount++;
+		return retVal;
 	}
 
 	@Override
@@ -115,11 +128,21 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (isEmpty()) {
 			throw new NoSuchElementException();
 		}
-		return remove(size-1);
+		T retVal = tail.getElement();
+		tail = tail.getPrevious();
+		if (tail == null) {
+			head = null;
+		} else {
+			tail.setNext(null);
+		}
+
+		size --;
+		modCount++;
+		return retVal;
 	}
 
 	@Override
-	public T remove(T element) {
+	public T remove(T element) { //Update
 		Node<T> currentNode = head;
 		Node<T> previousNode = null;
 		boolean isFound = false;
@@ -155,7 +178,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public T remove(int index) {
+	public T remove(int index) { //Update
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -184,7 +207,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public void set(int index, T element) {
+	public void set(int index, T element) { //Update
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -200,7 +223,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public T get(int index) {
+	public T get(int index) { //Update
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -215,7 +238,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public int indexOf(T element) {
+	public int indexOf(T element) { //Update
 		Node<T> currentNode = head;
         int currentIndex = 0;
         while (currentNode != null && !currentNode.getElement().equals(element)) {
@@ -296,16 +319,16 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     private class DLLIterator implements ListIterator<T> {
 
         private Node<T> nextNode;
+        private Node<T> lastReturnedNode; // Dual use when trying to remove or check if able to remove
         private int nextIndex;
         private int iterModCount;
-        private boolean canRemove; // May not work for all cases
 
         /** Initialize before first element */
         public DLLIterator() {
             nextNode = head;
             nextIndex = 0;
             iterModCount = modCount;
-            canRemove = false;
+            lastReturnedNode = null;
         }   
 
         /**
@@ -319,7 +342,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             }
             nextIndex = startingIndex;
             iterModCount = modCount;
-            canRemove = false;
+            lastReturnedNode = null;
         }        
 
         @Override
@@ -336,8 +359,8 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 throw new NoSuchElementException();
             }
             T retVal = nextNode.getElement();
+			lastReturnedNode = nextNode;
             nextNode = nextNode.getNext();
-            canRemove = true;
             nextIndex++;
             return retVal;
         }
@@ -382,72 +405,4 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         }
         
     }
-	// /** Iterator for IUSingleLinkedList */
-	// private class SLLIterator implements Iterator<T> {
-	// 	private Node<T> nodeCurrent;
-	// 	private Node<T> nodeSub1;
-	// 	private Node<T> nodeSub2;
-	// 	private int iterModCount;
-	// 	private boolean canRemove;
-		
-	// 	/** Creates a new iterator for the list */
-	// 	public SLLIterator() {
-	// 		nodeCurrent = head;
-	// 		nodeSub1 = null;
-	// 		nodeSub2 = null;
-	// 		iterModCount = modCount;
-	// 		canRemove = false;
-	// 	}
-
-	// 	@Override
-	// 	public boolean hasNext() {
-    //         if(iterModCount != modCount){
-    //             throw new ConcurrentModificationException();
-    //         } 
-	// 		return nodeCurrent != null;
-	// 	}
-
-	// 	@Override
-	// 	public T next() {
-	// 		if(iterModCount != modCount){
-    //             throw new ConcurrentModificationException();
-    //         }
-	// 		if (!hasNext()) {
-    //             throw new NoSuchElementException();
-    //         }
-	// 		nodeSub2 = nodeSub1;
-	// 		nodeSub1 = nodeCurrent;
-	// 		nodeCurrent = nodeCurrent.getNext();
-    //         canRemove = true;
-	// 		return nodeSub1.getElement();
-	// 	}
-		
-	// 	@Override
-	// 	public void remove() {
-	// 		if(iterModCount != modCount){
-    //             throw new ConcurrentModificationException();
-    //         }
-	// 		if (canRemove == false) {
-    //             throw new IllegalStateException();
-    //         }
-			
-	// 		if (head == nodeSub1) {
-	// 			head = head.getNext();
-	// 		} else if (tail == nodeSub1) {
-	// 			tail = nodeSub2;
-	// 			tail.setNext(null);
-	// 		}
-		
-	// 		//Do not do anything if nodeSub2 is null, this case is removing head. Already done above. 
-	// 		if (nodeSub2 != null) {
-	// 			nodeSub2.setNext(nodeCurrent);
-	// 			nodeSub1 = nodeSub2;
-	// 		}
-
-    //         canRemove = false;
-	// 		size--;
-    //         modCount++;
-    //         iterModCount++;
-	// 	}
-	// }
 }
