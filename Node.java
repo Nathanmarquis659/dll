@@ -6,6 +6,7 @@
  */
 public class Node<E> {
 	private Node<E> next;
+	private Node<E> previous;
 	private E element;
 
 	/**
@@ -14,6 +15,7 @@ public class Node<E> {
 	public Node() {
 		next = null;
 		element = null;
+		previous = null;
 	}
 
 	/**
@@ -39,11 +41,28 @@ public class Node<E> {
 	/**
  	 * Sets the node that follows this one.
  	 *
- 	 * @param node
- 	 *            the node to be set to follow the current one
+ 	 * @param node the node to be set to follow the current one
  	 */
 	public void setNext(Node<E> node) {
 		next = node;
+	}
+
+	/**
+ 	 * Returns the node that precedes this one.
+  	 *
+  	 * @return the node that precedes the current one
+  	 */
+	  public Node<E> getPrevious() {
+		return previous;
+	}
+
+	/**
+ 	 * Sets the node that precedes this one.
+ 	 *
+ 	 * @param node the node to be set to precede the current one
+ 	 */
+	public void setPrevious(Node<E> node) {
+		previous = node;
 	}
 
 	/**

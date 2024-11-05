@@ -324,20 +324,27 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public boolean hasNext() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'hasNext'");
+            if (iterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+            return nextNode != null;
         }
 
         @Override
         public T next() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'next'");
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T retVal = nextNode.getElement();
+            nextNode = nextNode.getNext();
+            canRemove = true;
+            nextIndex++;
+            return retVal;
         }
 
         @Override
         public boolean hasPrevious() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'hasPrevious'");
+            return nextNode != head;
         }
 
         @Override
@@ -348,14 +355,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public int nextIndex() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'nextIndex'");
+            return nextIndex;
         }
 
         @Override
         public int previousIndex() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'previousIndex'");
+            return nextIndex - 1;
         }
 
         @Override
