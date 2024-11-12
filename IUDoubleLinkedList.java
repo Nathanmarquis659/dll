@@ -325,10 +325,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         /** Initialize before first element */
         public DLLIterator() {
-            nextNode = head;
-            nextIndex = 0;
-            iterModCount = modCount;
-            lastReturnedNode = null;
+            this(0);
         }   
 
         /**
@@ -337,6 +334,8 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
          */
         public DLLIterator(int startingIndex) {
             nextNode = head;
+
+			//Only efficient in the first half, can be written to back up from tail in the back half with
             for (int i = 0; i < startingIndex; i++) {
                 nextNode = nextNode.getNext();
             }
@@ -372,8 +371,14 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public T previous() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'previous'");
+            if (!hasPrevious()) {
+                throw new NoSuchElementException();
+            }
+            T retVal = nextNode.getElement();
+			lastReturnedNode = nextNode;
+            nextNode = nextNode.getNext();
+            nextIndex++;
+            return retVal;
         }
 
         @Override
@@ -388,14 +393,42 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public void remove() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'remove'");
+			if (iterModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			if (lastReturnedNode == null) {
+				throw new IllegalStateException();
+			}
+
+			if (lastReturnedNode != nextNode) { //last move was next
+				nextIndex--;
+
+			} else {
+				nextIndex++;
+			}
+			//head
+			//tail
+			//Dont forget decrement and increment
+
+
+			lastReturnedNode = null;
+			size--;
+			iterModCount++;
+			modCount++;
         }
 
         @Override
         public void set(T e) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'set'");
+            if (iterModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			if (lastReturnedNode == null) {
+				throw new IllegalStateException();
+			}
+
+			lastReturnedNode.setElement(e);
+			iterModCount++;
+			modCount++;
         }
 
         @Override
