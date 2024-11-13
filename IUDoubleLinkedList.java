@@ -26,30 +26,37 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public void addToFront(T element) {
-		Node<T> newHead = new Node<T>(element);
-		newHead.setNext(head);
-		if (head != null) {
-			head.setPrevious(newHead);
-		}
-		head = newHead;
-		if (tail == null) {
-			tail = head;
-		}
-		size ++;
-		modCount++;
+
+		ListIterator<T> iterator = new DLLIterator();
+		iterator.add(element);
+
+		// Node<T> newHead = new Node<T>(element);
+		// newHead.setNext(head);
+		// if (head != null) {
+		// 	head.setPrevious(newHead);
+		// }
+		// head = newHead;
+		// if (tail == null) {
+		// 	tail = head;
+		// }
+		// size ++;
+		// modCount++;
 	}
 
 	@Override
-	public void addToRear(T element) { //Update
-		Node<T> newTail = new Node<T>(element);
-		if (!isEmpty()) {
-			tail.setNext(newTail);
-		} else {
-			head = newTail;
-		}
-		tail = newTail;
-		size ++;
-		modCount++;
+	public void addToRear(T element) {
+		ListIterator<T> iterator = new DLLIterator(size);
+		iterator.add(element);
+
+		// Node<T> newTail = new Node<T>(element);
+		// if (!isEmpty()) {
+		// 	tail.setNext(newTail);
+		// } else {
+		// 	head = newTail;
+		// }
+		// tail = newTail;
+		// size ++;
+		// modCount++;
 	}
 
 	@Override
@@ -370,7 +377,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public boolean hasPrevious() {
-            return nextNode != head;
+            return (nextNode != head);
         }
 
         @Override
@@ -378,10 +385,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             if (!hasPrevious()) {
                 throw new NoSuchElementException();
             }
+			if (!hasNext()) {
+				nextNode = lastReturnedNode = tail;
+			}
             T retVal = nextNode.getElement();
-			lastReturnedNode = nextNode;
-            nextNode = nextNode.getNext();
-            nextIndex++;
+			nextNode = lastReturnedNode;
+            nextIndex--;
             return retVal;
         }
 
@@ -438,7 +447,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
 			//head
 			//tail
-
 
 			lastReturnedNode = null;
 			size--;
