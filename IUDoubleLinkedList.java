@@ -65,51 +65,68 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	}
 
 	@Override
-	public void addAfter(T element, T target) { //Update
-		Node<T> newNode = new Node<T>(element);
-		Node<T> currentNode = head;
-		boolean isFound = false;
-		while (currentNode != null && !isFound) {
-			if (currentNode.getElement().equals(target)) {
-				isFound = true;
-				if (currentNode == tail) {
-					tail = newNode;
-				} else {
-					newNode.setNext(currentNode.getNext());
-				}
-				currentNode.setNext(newNode);
-			} else {
-				currentNode = currentNode.getNext();
-			}
+	public void addAfter(T element, T target) { 
+		ListIterator<T> iterator = new DLLIterator();
+		Boolean isFound = false;
+		while (!isFound && iterator.hasNext()) {
+			isFound = iterator.next() == target;
 		}
-		
 		if (!isFound) {
 			throw new NoSuchElementException();
 		}
-		size ++;
-		modCount++;
+
+		iterator.add(element);
+
+
+
+		// Node<T> newNode = new Node<T>(element);
+		// Node<T> currentNode = head;
+		// boolean isFound = false;
+		// while (currentNode != null && !isFound) {
+		// 	if (currentNode.getElement().equals(target)) {
+		// 		isFound = true;
+		// 		if (currentNode == tail) {
+		// 			tail = newNode;
+		// 		} else {
+		// 			newNode.setNext(currentNode.getNext());
+		// 		}
+		// 		currentNode.setNext(newNode);
+		// 	} else {
+		// 		currentNode = currentNode.getNext();
+		// 	}
+		// }
+		
+		// if (!isFound) {
+		// 	throw new NoSuchElementException();
+		// }
+		// size ++;
+		// modCount++;
 	}
 
 	@Override
-	public void add(int index, T element) { //Update
+	public void add(int index, T element) {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}
-		if (index == 0) {
-			addToFront(element);
-		} else if (index == size) {
-			addToRear(element);
-		} else {
-			Node<T> currentNode = head;
-			Node<T> addNode = new Node<>(element);
-			for (int i=0; i < index-1; i++) {
-				currentNode = currentNode.getNext();
-			}
-			addNode.setNext(currentNode.getNext());
-			currentNode.setNext(addNode);
-			size ++;
-			modCount++;
-		}
+		ListIterator<T> iterator = new DLLIterator(index);
+		iterator.add(element);
+
+
+		// if (index == 0) {
+		// 	addToFront(element);
+		// } else if (index == size) {
+		// 	addToRear(element);
+		// } else {
+		// 	Node<T> currentNode = head;
+		// 	Node<T> addNode = new Node<>(element);
+		// 	for (int i=0; i < index-1; i++) {
+		// 		currentNode = currentNode.getNext();
+		// 	}
+		// 	addNode.setNext(currentNode.getNext());
+		// 	currentNode.setNext(addNode);
+		// 	size ++;
+		// 	modCount++;
+		// }
 	}
 
 	@Override
@@ -117,17 +134,22 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (isEmpty()) {
 			throw new NoSuchElementException();
 		}
-		T retVal = head.getElement();
-		head = head.getNext();
-		if (head == null) {
-			tail = null;
-		} else {
-			head.setPrevious(null);
-		}
-
-		size --;
-		modCount++;
+		ListIterator<T> iterator = new DLLIterator();
+		T retVal = iterator.next();
+		iterator.remove();
 		return retVal;
+
+		// T retVal = head.getElement();
+		// head = head.getNext();
+		// if (head == null) {
+		// 	tail = null;
+		// } else {
+		// 	head.setPrevious(null);
+		// }
+
+		// size --;
+		// modCount++;
+		// return retVal;
 	}
 
 	@Override
@@ -135,51 +157,71 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (isEmpty()) {
 			throw new NoSuchElementException();
 		}
-		T retVal = tail.getElement();
-		tail = tail.getPrevious();
-		if (tail == null) {
-			head = null;
-		} else {
-			tail.setNext(null);
-		}
-
-		size --;
-		modCount++;
+		ListIterator<T> iterator = new DLLIterator(size-1);
+		T retVal = iterator.next();
+		iterator.remove();
 		return retVal;
+
+		// tail = tail.getPrevious();
+		// if (tail == null) {
+		// 	head = null;
+		// } else {
+		// 	tail.setNext(null);
+		// }
+
+		// size --;
+		// modCount++;
 	}
 
 	@Override
-	public T remove(T element) { //Update
-		Node<T> currentNode = head;
-		Node<T> previousNode = null;
-		boolean isFound = false;
-		T retVal = null;
+	public T remove(T element) { 
+		if (isEmpty()) {
+			throw new NoSuchElementException();
+		}
 
-		while (currentNode != null && !isFound) {
-			if (currentNode.getElement().equals(element)) {
-				isFound = true;
-			} else {
-				previousNode = currentNode;
-				currentNode = currentNode.getNext();
-			}
+		ListIterator<T> iterator = new DLLIterator();
+		Boolean isFound = false;
+		T retVal = null;
+		while (!isFound && iterator.hasNext()) {
+			retVal = iterator.next();
+			isFound = retVal == element;
 		}
 		if (!isFound) {
 			throw new NoSuchElementException();
 		}
-
-		retVal = currentNode.getElement();
-		if (currentNode == head) {
-			head = head.getNext();
-		} else if (currentNode == tail) {
-			previousNode.setNext(null);
-			tail = previousNode;
-		} else {
-			previousNode.setNext(currentNode.getNext());
-		}
-
-		size--;
-		modCount++;
+		iterator.remove();
 		return retVal;
+
+		// Node<T> currentNode = head;
+		// Node<T> previousNode = null;
+		// boolean isFound = false;
+		// T retVal = null;
+
+		// while (currentNode != null && !isFound) {
+		// 	if (currentNode.getElement().equals(element)) {
+		// 		isFound = true;
+		// 	} else {
+		// 		previousNode = currentNode;
+		// 		currentNode = currentNode.getNext();
+		// 	}
+		// }
+		// if (!isFound) {
+		// 	throw new NoSuchElementException();
+		// }
+
+		// retVal = currentNode.getElement();
+		// if (currentNode == head) {
+		// 	head = head.getNext();
+		// } else if (currentNode == tail) {
+		// 	previousNode.setNext(null);
+		// 	tail = previousNode;
+		// } else {
+		// 	previousNode.setNext(currentNode.getNext());
+		// }
+
+		// size--;
+		// modCount++;
+		// return retVal;
 
 
 	}
@@ -189,44 +231,48 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-
-		Node<T> currentNode = head;
-		Node<T> previousNode = null;
-		T retVal = null;
-
-		for (int i = 0; i < index; i++) {
-			previousNode = currentNode;
-			currentNode = currentNode.getNext();
-		}
-		retVal = currentNode.getElement();
-		if (currentNode == head) {
-			head = head.getNext();
-		} else if (currentNode == tail) {
-			previousNode.setNext(null);
-			tail = previousNode;
-		} else {
-			previousNode.setNext(currentNode.getNext());
-		}
-
-		size--;
-		modCount++;
+		ListIterator<T> iterator = new DLLIterator(index);
+		T retVal = iterator.next();
+		iterator.remove();
 		return retVal;
+		// Node<T> currentNode = head;
+		// Node<T> previousNode = null;
+
+		// for (int i = 0; i < index; i++) {
+		// 	previousNode = currentNode;
+		// 	currentNode = currentNode.getNext();
+		// }
+		// retVal = currentNode.getElement();
+		// if (currentNode == head) {
+		// 	head = head.getNext();
+		// } else if (currentNode == tail) {
+		// 	previousNode.setNext(null);
+		// 	tail = previousNode;
+		// } else {
+		// 	previousNode.setNext(currentNode.getNext());
+		// }
+
+		// size--;
+		// modCount++;
 	}
 
 	@Override
-	public void set(int index, T element) { //Update
+	public void set(int index, T element) { 
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
 
-		Node<T> currentNode = head;
+		ListIterator<T> iterator = new DLLIterator(index);
+		iterator.next();
+		iterator.set(element);
+		// Node<T> currentNode = head;
 
-		for (int i = 0; i < index; i++) {
-			currentNode = currentNode.getNext();
-		}
+		// for (int i = 0; i < index; i++) {
+		// 	currentNode = currentNode.getNext();
+		// }
 		
-		currentNode.setElement(element);
-		modCount++;
+		// currentNode.setElement(element);
+		// modCount++;
 	}
 
 	@Override
@@ -235,13 +281,16 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 			throw new IndexOutOfBoundsException();
 		}
 
-		Node<T> currentNode = head;
+		ListIterator<T> iterator = new DLLIterator(index);
+		T retVal = iterator.next();
+		return retVal;
+		// Node<T> currentNode = head;
 
-		for (int i = 0; i < index; i++) {
-			currentNode = currentNode.getNext();
-		}
+		// for (int i = 0; i < index; i++) {
+		// 	currentNode = currentNode.getNext();
+		// }
 		
-		return currentNode.getElement();
+		// return currentNode.getElement();
 	}
 
 	@Override
