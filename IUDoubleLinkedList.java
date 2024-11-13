@@ -333,6 +333,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
          * @param startingIndex the index to start in front of
          */
         public DLLIterator(int startingIndex) {
+			if (startingIndex < 0 || startingIndex > size) {
+				throw new IndexOutOfBoundsException();
+			}
+
             nextNode = head;
 
 			//Only efficient in the first half, can be written to back up from tail in the back half with
@@ -400,15 +404,40 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 				throw new IllegalStateException();
 			}
 
-			if (lastReturnedNode != nextNode) { //last move was next
-				nextIndex--;
+			if (size == 1) {
+				head = tail = nextNode = null;
+			} else if (lastReturnedNode != nextNode) { //last move was next
+				if (lastReturnedNode == head) {
+					head = nextNode;
+					head.setPrevious(null);
+				} else if (lastReturnedNode == tail) {
+					tail = tail.getPrevious();
+					tail.setNext(null);
+				} else {
+					lastReturnedNode.getPrevious().setNext(nextNode);
+					nextNode.setPrevious(lastReturnedNode.getPrevious());
+				}
 
-			} else {
-				nextIndex++;
+				nextIndex--;
+			} else if (lastReturnedNode == nextNode) { //last move was previous
+				if (lastReturnedNode == head) {
+					head = head.getNext();
+					head.setPrevious(null);
+				} else if (lastReturnedNode == tail) {
+					tail = tail.getPrevious();
+					tail.setNext(null);
+				} else {
+					nextNode.getPrevious().setNext(nextNode.getNext());
+					nextNode.getNext().setPrevious(nextNode.getPrevious());
+				}
 			}
+			// else {
+			// 	nextIndex++;
+			// }
+			//Dont forget decrement and increment
+
 			//head
 			//tail
-			//Dont forget decrement and increment
 
 
 			lastReturnedNode = null;
@@ -433,8 +462,33 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public void add(T e) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'add'");
+			if (iterModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			Node<T> newNode = new Node<T>(e);
+            if (size == 0) {
+				head = tail = nextNode = newNode;
+			} else if (size > 0) {
+				if (!hasNext()) {
+					tail.setNext(newNode);
+					newNode.setPrevious(tail);
+					tail = newNode;
+				} else if (!hasPrevious()){
+					head.setPrevious(newNode);
+					newNode.setNext(head);
+					head = newNode;
+				} else {
+					nextNode.getPrevious().setNext(newNode);
+					nextNode.setPrevious(newNode);
+				}
+			}
+
+			lastReturnedNode = null;
+			nextIndex++;
+			size++;
+			iterModCount++;
+			modCount++;
+
         }
         
     }
