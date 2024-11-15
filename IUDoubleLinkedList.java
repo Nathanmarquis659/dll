@@ -29,34 +29,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
 		ListIterator<T> iterator = new DLLIterator();
 		iterator.add(element);
-
-		// Node<T> newHead = new Node<T>(element);
-		// newHead.setNext(head);
-		// if (head != null) {
-		// 	head.setPrevious(newHead);
-		// }
-		// head = newHead;
-		// if (tail == null) {
-		// 	tail = head;
-		// }
-		// size ++;
-		// modCount++;
 	}
 
 	@Override
 	public void addToRear(T element) {
 		ListIterator<T> iterator = new DLLIterator(size);
 		iterator.add(element);
-
-		// Node<T> newTail = new Node<T>(element);
-		// if (!isEmpty()) {
-		// 	tail.setNext(newTail);
-		// } else {
-		// 	head = newTail;
-		// }
-		// tail = newTail;
-		// size ++;
-		// modCount++;
 	}
 
 	@Override
@@ -74,33 +52,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (!isFound) {
 			throw new NoSuchElementException();
 		}
-
 		iterator.add(element);
-
-
-
-		// Node<T> newNode = new Node<T>(element);
-		// Node<T> currentNode = head;
-		// boolean isFound = false;
-		// while (currentNode != null && !isFound) {
-		// 	if (currentNode.getElement().equals(target)) {
-		// 		isFound = true;
-		// 		if (currentNode == tail) {
-		// 			tail = newNode;
-		// 		} else {
-		// 			newNode.setNext(currentNode.getNext());
-		// 		}
-		// 		currentNode.setNext(newNode);
-		// 	} else {
-		// 		currentNode = currentNode.getNext();
-		// 	}
-		// }
-		
-		// if (!isFound) {
-		// 	throw new NoSuchElementException();
-		// }
-		// size ++;
-		// modCount++;
 	}
 
 	@Override
@@ -110,23 +62,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		}
 		ListIterator<T> iterator = new DLLIterator(index);
 		iterator.add(element);
-
-
-		// if (index == 0) {
-		// 	addToFront(element);
-		// } else if (index == size) {
-		// 	addToRear(element);
-		// } else {
-		// 	Node<T> currentNode = head;
-		// 	Node<T> addNode = new Node<>(element);
-		// 	for (int i=0; i < index-1; i++) {
-		// 		currentNode = currentNode.getNext();
-		// 	}
-		// 	addNode.setNext(currentNode.getNext());
-		// 	currentNode.setNext(addNode);
-		// 	size ++;
-		// 	modCount++;
-		// }
 	}
 
 	@Override
@@ -138,18 +73,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		T retVal = iterator.next();
 		iterator.remove();
 		return retVal;
-
-		// T retVal = head.getElement();
-		// head = head.getNext();
-		// if (head == null) {
-		// 	tail = null;
-		// } else {
-		// 	head.setPrevious(null);
-		// }
-
-		// size --;
-		// modCount++;
-		// return retVal;
 	}
 
 	@Override
@@ -161,16 +84,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		T retVal = iterator.next();
 		iterator.remove();
 		return retVal;
-
-		// tail = tail.getPrevious();
-		// if (tail == null) {
-		// 	head = null;
-		// } else {
-		// 	tail.setNext(null);
-		// }
-
-		// size --;
-		// modCount++;
 	}
 
 	@Override
@@ -191,39 +104,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		}
 		iterator.remove();
 		return retVal;
-
-		// Node<T> currentNode = head;
-		// Node<T> previousNode = null;
-		// boolean isFound = false;
-		// T retVal = null;
-
-		// while (currentNode != null && !isFound) {
-		// 	if (currentNode.getElement().equals(element)) {
-		// 		isFound = true;
-		// 	} else {
-		// 		previousNode = currentNode;
-		// 		currentNode = currentNode.getNext();
-		// 	}
-		// }
-		// if (!isFound) {
-		// 	throw new NoSuchElementException();
-		// }
-
-		// retVal = currentNode.getElement();
-		// if (currentNode == head) {
-		// 	head = head.getNext();
-		// } else if (currentNode == tail) {
-		// 	previousNode.setNext(null);
-		// 	tail = previousNode;
-		// } else {
-		// 	previousNode.setNext(currentNode.getNext());
-		// }
-
-		// size--;
-		// modCount++;
-		// return retVal;
-
-
 	}
 
 	@Override
@@ -235,25 +115,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		T retVal = iterator.next();
 		iterator.remove();
 		return retVal;
-		// Node<T> currentNode = head;
-		// Node<T> previousNode = null;
-
-		// for (int i = 0; i < index; i++) {
-		// 	previousNode = currentNode;
-		// 	currentNode = currentNode.getNext();
-		// }
-		// retVal = currentNode.getElement();
-		// if (currentNode == head) {
-		// 	head = head.getNext();
-		// } else if (currentNode == tail) {
-		// 	previousNode.setNext(null);
-		// 	tail = previousNode;
-		// } else {
-		// 	previousNode.setNext(currentNode.getNext());
-		// }
-
-		// size--;
-		// modCount++;
 	}
 
 	@Override
@@ -261,18 +122,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-
 		ListIterator<T> iterator = new DLLIterator(index);
 		iterator.next();
 		iterator.set(element);
-		// Node<T> currentNode = head;
-
-		// for (int i = 0; i < index; i++) {
-		// 	currentNode = currentNode.getNext();
-		// }
-		
-		// currentNode.setElement(element);
-		// modCount++;
 	}
 
 	@Override
@@ -280,17 +132,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-
 		ListIterator<T> iterator = new DLLIterator(index);
 		T retVal = iterator.next();
 		return retVal;
-		// Node<T> currentNode = head;
-
-		// for (int i = 0; i < index; i++) {
-		// 	currentNode = currentNode.getNext();
-		// }
-		
-		// return currentNode.getElement();
 	}
 
 	@Override
@@ -501,14 +345,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 					nextNode.getNext().setPrevious(nextNode.getPrevious());
 				}
 			}
-			// else {
-			// 	nextIndex++;
-			// }
-			//Dont forget decrement and increment
-
-			//head
-			//tail
-
 			lastReturnedNode = null;
 			size--;
 			iterModCount++;
@@ -555,14 +391,11 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 					nextNode.setPrevious(newNode);
 				}
 			}
-
-
 			lastReturnedNode = null;
 			nextIndex++;
 			size++;
 			iterModCount++;
 			modCount++;
         }
-        
     }
 }
