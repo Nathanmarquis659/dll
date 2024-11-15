@@ -7,72 +7,65 @@
 
 OVERVIEW:
 
- Concisely explain what the program does. If this exceeds a couple
- of sentences, you're going too far. The details go in other
- sections.
+Creates a double linked list implementation of an indexed unsorted list which can 
+represent any generic value. Uses nodes with next and previous references, and implements 
+a List Iterator interface that supports Iterator as well. Test class included that tests
+for proper behavior, with regards to concurrency as well. 
 
 
 INCLUDED FILES:
 
- List the files required for the project with a brief
- explanation of why each is included.
-
- e.g.
- * Class1.java - source file
- * Class2.java - source file
- * README - this file
+ * IUDoubleLinkedList.java - source file with double linked list and list iterator logic
+ * Node.java - source file defining double linked nodes used in IUDoubleLinkedList.java
+ * ListTester.java - test file used to verify proper behaviour of above files
+ * README - this file ; explanation of program
 
 
 COMPILING AND RUNNING:
 
- Give the command for compiling the program, the command
- for running the program, and any usage instructions the
- user needs.
- 
- These are command-line instructions for a system like onyx.
- They have nothing to do with Eclipse or any other IDE. They
- must be specific - assume the user has Java installed, but
- has no idea how to compile or run a Java program from the
- command-line.
- 
- e.g.
  From the directory containing all source files, compile the
  driver class (and all dependencies) with the command:
- $ javac Class1.java
+ $ javac ListTester.java
 
  Run the compiled class file with the command:
- $ java Class1
+ $ java ListTester
 
- Console output will give the results after the program finishes.
+ Console output will give the results after the program finishes
+ with the total number and proportion of tests passed.
 
 
 PROGRAM DESIGN AND IMPORTANT CONCEPTS:
 
- This is the sort of information someone who really wants to
- understand your program - possibly to make future enhancements -
- would want to know.
+ IUDoubleLinkedList is an implementation of IndexedUnsortedList which uses a 
+ double linked node as it's base unit. A Node is an object that has a next and 
+ previous reference as well as a stored value of generic type. The double linked 
+ list uses these nodes strung together using their next/previous to form a 
+ list of data that can be interacted with using the methods as described in 
+ the IndexedUnsortedList interface. The head and tail of the list are tracked,
+ as well as the size and modification count of each list object. There is also 
+ an implementation of ListIterator that extends the functionality of a normal
+ Iterator with additional methods. ListIterators are used within the primary list 
+ methods to simplify and streamline the codebase and eliminate code duplication.
 
- Explain the main concepts and organization of your program so that
- the reader can understand how your program works. This is not a repeat
- of javadoc comments or an exhaustive listing of all methods, but an
- explanation of the critical algorithms and object interactions that make
- up the program.
-
- Explain the main responsibilities of the classes and interfaces that make
- up the program. Explain how the classes work together to achieve the program
- goals. If there are critical algorithms that a user should understand, 
- explain them as well.
- 
- If you were responsible for designing the program's classes and choosing
- how they work together, why did you design the program this way? What, if 
- anything, could be improved? 
+ The code design could be improved by optimizing for cases where an element is
+ added closer to the end of the list. Currently any searching or adding of elements
+ is done starting from the head which is not the most efficient way. 
 
 TESTING:
 
- How did you test your program to be sure it works and meets all of the
- requirements? What was the testing strategy? What kinds of tests were run?
- Can your program handle bad input? Is your program  idiot-proof? How do you 
- know? What are the known issues / bugs remaining in your program?
+ Testing is accomplished using the ListTester class. It exhaustively goes through
+ the majority of change scenarios when using the IndexedUnsortedList methods or 
+ the ListIterator methods. It begins with tests resulting in empty lists and goes 
+ up to tests resulting in three element lists. Each change scenario has a test
+ list which covers most possible combinations of the aforementioned methods as 
+ performed on said scenario. Concurrency test were performed to ensure that 
+ changes performed outside of a ListIterator would terminate said iterator to
+ prevent out-of-date interaction with the list it originally assigned. The code
+ has a fixed set of inputs as described in the ListTester class, eliminating the 
+ possibility for users to input bad data. As a backup, the list is generic and able
+ to take in any type of object as a reference to a node.There are not remaining 
+ bugs or issues that I am aware of in my code, but there could be added more test
+ scenarios and list tests to achieve a more complete picture. 
 
 
 DISCUSSION:
@@ -84,18 +77,35 @@ DISCUSSION:
  
  What parts of the project did you find challenging? Is there anything
  that finally "clicked" for you in the process of working on this project?
+
+ As an extension of the single linked list, I had expected the double linked
+ list to go smoother than it actually did. I struggled initially with a large
+ amount of bugs resulting from me forgetting to assign all of the proper 
+ references needed when having double the amount of links between all the nodes
+ in my list. There were multiple cases of bugs introduced because there was not
+ a next or previous node assigned when I executed the add or remove methods.
+ There were tons of null references too because of this issue where the list
+ would try to use the getNext() or getElement() on a null node. This was 
+ VERY confusing for a while until I fully drew out each change scenario as 
+ compared to my actual code executing line by line. This was the most effective
+ way for me to figure out where my program was forgetting to assign references 
+ in edge cases. The final and most impactful improvement was when I converted 
+ my IndexedUnsortedList methods to use the List Iterator as their base, which
+ removed most of my redundant code and made it MUCH more readable as a codebase. 
+ Any issue could then be traced back to my quality of the iterator methods 
+ instead of chasing bugs and references all around my program and test class. 
+ The final part that was challenging for me was accidental issues introduced in 
+ my test class that were expecting incorrect outputs. It took me a long time to
+ figure out that my IUDoubleLinkedList was doing fine but these final couple of 
+ classes were actually due to an incorrectly written test item that expected 
+ False instead of True on hasNext() or some other method call. The debugger 
+ helped me massively in this respect and it helped me much more deeply and quickly
+ decipher problems in my code.
  
  
 EXTRA CREDIT:
 
- If the project had opportunities for extra credit that you attempted,
- be sure to call it out so the grader does not overlook it.
+ N/A
 
 
 ----------------------------------------------------------------------------
-
-All content in a README file is expected to be written in clear English with
-proper grammar, spelling, and punctuation. If you are not a strong writer,
-be sure to get someone else to help you with proofreading. Consider all project
-documentation to be professional writing for your boss and/or potential
-customers.

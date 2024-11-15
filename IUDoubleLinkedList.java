@@ -17,25 +17,41 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 	private int size;
 	private int modCount;
 	
-	/** Creates an empty list */
+	/** 
+	 * Creates an empty list with head and tail = null
+	 */
 	public IUDoubleLinkedList() {
 		head = tail = null;
 		size = 0;
 		modCount = 0;
 	}
 
+	/**
+	 * Uses a new DLLIterator with the add method to place the
+	 * element at the front of the list.
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addToFront(T element) {
 		ListIterator<T> iterator = new DLLIterator();
 		iterator.add(element);
 	}
 
+	/**
+	 * Uses a new DLLIterator starting at end of the list 
+	 * with the add method to place the element at the front of the list.
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addToRear(T element) {
 		ListIterator<T> iterator = new DLLIterator(size);
 		iterator.add(element);
 	}
 
+	/**
+	 * Uses the addToRear() method, which has the same functionality.
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void add(T element) {
 		addToRear(element);
@@ -247,6 +263,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             lastReturnedNode = null;
         }        
 
+		
         @Override
         public boolean hasNext() {
             if (iterModCount != modCount) {

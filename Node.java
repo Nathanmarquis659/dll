@@ -1,7 +1,7 @@
 /**
  * Node represents a node in a linked list.
  *
- * @author Java Foundations, mvail
+ * @author Java Foundations, NathanMarquis
  * @version 4.0
  */
 public class Node<E> {
