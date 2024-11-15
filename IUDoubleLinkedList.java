@@ -437,11 +437,14 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             if (!hasPrevious()) {
                 throw new NoSuchElementException();
             }
+			T retVal;
 			if (!hasNext()) {
 				nextNode = lastReturnedNode = tail;
+				retVal = tail.getElement();
+			} else {
+				lastReturnedNode = nextNode = nextNode.getPrevious();
+				retVal = lastReturnedNode.getElement();
 			}
-            T retVal = nextNode.getElement();
-			nextNode = lastReturnedNode;
             nextIndex--;
             return retVal;
         }
