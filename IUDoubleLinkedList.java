@@ -57,6 +57,11 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		addToRear(element);
 	}
 
+	/**
+	 * Uses the list iterator to search and add an element after a target
+	 * element
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addAfter(T element, T target) { 
 		ListIterator<T> iterator = new DLLIterator();
@@ -70,6 +75,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		iterator.add(element);
 	}
 
+	/**
+	 * Uses the list iterator to add an element at a specific index
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void add(int index, T element) {
 		if (index < 0 || index > size) {
@@ -79,6 +88,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		iterator.add(element);
 	}
 
+	/**
+	 * Uses the list iterator to remove the first node/element
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T removeFirst() {
 		if (isEmpty()) {
@@ -90,17 +103,26 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		return retVal;
 	}
 
+	/**
+	 * Uses the list iterator starting at the end with previous to
+	 * remove the final node/element
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T removeLast() {
 		if (isEmpty()) {
 			throw new NoSuchElementException();
 		}
-		ListIterator<T> iterator = new DLLIterator(size-1);
-		T retVal = iterator.next();
+		ListIterator<T> iterator = new DLLIterator(size);
+		T retVal = iterator.previous();
 		iterator.remove();
 		return retVal;
 	}
 
+	/**
+	 * Uses the list iterator to search and remove a target element 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T remove(T element) { 
 		if (isEmpty()) {
@@ -121,6 +143,11 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		return retVal;
 	}
 
+	/**
+	 * Uses the list iterator at an index to remove said element
+	 * at that index
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T remove(int index) {
 		if (index < 0 || index >= size) {
@@ -132,6 +159,11 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		return retVal;
 	}
 
+	/**
+	 * Uses the list iterator at an index to change the value associated
+	 * with the node at the selected index
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void set(int index, T element) { 
 		if (index < 0 || index >= size) {
@@ -142,6 +174,11 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		iterator.set(element);
 	}
 
+	/**
+	 * Uses the list iterator at an index to retrieve said element
+	 * at that index
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T get(int index) { //Update
 		if (index < 0 || index >= size) {
@@ -152,8 +189,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		return retVal;
 	}
 
+	/**
+	 * Searches nodes using a loop to find what index the element is 
+	 * {@inheritDoc}
+	 */
 	@Override
-	public int indexOf(T element) { //Update
+	public int indexOf(T element) {
 		Node<T> currentNode = head;
         int currentIndex = 0;
         while (currentNode != null && !currentNode.getElement().equals(element)) {
@@ -166,6 +207,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 		return currentIndex;
 	}
 
+	/**
+	 * Retrieves the first node's element value
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T first() {
 		if (isEmpty()) {
@@ -174,6 +219,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         return head.getElement();
 	}
 
+	/**
+	 * Retrieves the last node's element value
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T last() {
 		if (isEmpty()) {
@@ -182,21 +231,38 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         return tail.getElement();
 	}
 
+	/**
+	 * Uses contains() to see if the target element is  
+	 * present in the lists
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean contains(T target) {
 		return indexOf(target) > -1;
 	}
 
+	/**
+	 * Checks if the list has no nodes
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isEmpty() {
 		return size == 0;
 	}
 
+	/**
+	 * Checks the number of nodes present
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int size() {
 		return size;
 	}
 
+	/**
+	 * A loop that retrieves each node's value in the list with proper formatting
+	 * {@inheritDoc}
+	 */
     @Override
     public String toString() {
         if (isEmpty()) return "[]";
@@ -215,16 +281,30 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         return b.toString();
     }
 
+	/**
+	 * Through inheritance leverages DLLIterator for basic iterator 
+	 * functionality
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Iterator<T> iterator() {
 		return new DLLIterator();
 	}
 
+	/**
+	 * Uses DLLIterator to achieve full listIterator functionality
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ListIterator<T> listIterator() {
 		return new DLLIterator();
 	}
 
+	/**
+	 * Uses DLLIterator to achieve full listIterator functionality beginning
+	 * at the startingIndex
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ListIterator<T> listIterator(int startingIndex) {
 		return new DLLIterator(startingIndex);
@@ -263,7 +343,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             lastReturnedNode = null;
         }        
 
-		
+		/**
+		 * Checks that there exists a next node
+		 * {@inheritDoc}
+		 */
         @Override
         public boolean hasNext() {
             if (iterModCount != modCount) {
@@ -272,6 +355,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             return nextNode != null;
         }
 
+		/**
+		 * Moves iterator past the next node
+		 * {@inheritDoc}
+		 */
         @Override
         public T next() {
             if (!hasNext()) {
@@ -284,6 +371,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             return retVal;
         }
 
+		/**
+		 * Checks that there exists a previous node
+		 * {@inheritDoc}
+		 */
         @Override
         public boolean hasPrevious() {
 			if (iterModCount != modCount) {
@@ -292,6 +383,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             return (nextNode != head);
         }
 
+		/**
+		 * Moves iterator past the previous node
+		 * {@inheritDoc}
+		 */
         @Override
         public T previous() {
             if (!hasPrevious()) {
@@ -309,6 +404,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             return retVal;
         }
 
+		/**
+		 * Gives the next node's index
+		 * {@inheritDoc}
+		 */
         @Override
         public int nextIndex() {
 			if (iterModCount != modCount) {
@@ -317,6 +416,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             return nextIndex;
         }
 
+		/**
+		 * Gives the previous node's index
+		 * {@inheritDoc}
+		 */
         @Override
         public int previousIndex() {
 			if (iterModCount != modCount) {
@@ -325,6 +428,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             return nextIndex - 1;
         }
 
+		/**
+		 * After next or previous, removes associated node
+		 * {@inheritDoc}
+		 */
         @Override
         public void remove() {
 			if (iterModCount != modCount) {
@@ -367,6 +474,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 			modCount++;
         }
 
+		/**
+		 * After next or previous, changes associated node with new value
+		 * {@inheritDoc}
+		 */
         @Override
         public void set(T e) {
             if (iterModCount != modCount) {
@@ -381,6 +492,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 			modCount++;
         }
 
+		/**
+		 * Adds a node before the iterator
+		 * {@inheritDoc}
+		 */
         @Override
         public void add(T e) {
 			if (iterModCount != modCount) {
