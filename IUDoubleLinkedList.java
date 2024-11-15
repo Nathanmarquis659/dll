@@ -5,8 +5,8 @@ import java.util.ConcurrentModificationException;
 
 /**
  * Double-linked node implementation of IndexedUnsortedList.
- * An Iterator with working remove() method is implemented, but
- * ListIterator is supported.
+ * A List Iterator with working listiterator methods is implemented, supports 
+ * typical iterator methods as well. 
  * 
  * @author NathanMarquis
  * 
@@ -26,7 +26,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public void addToFront(T element) {
-
 		ListIterator<T> iterator = new DLLIterator();
 		iterator.add(element);
 	}
